@@ -5,6 +5,24 @@ image:
   imagePullPolicy: ""
   imagePullSecrets: []
 
+splunkWeb:
+  name: splunk-stdln-standalone
+
+  annotations:
+    com.palantir.rubix.service/pod-cert: "{}"
+    com.palantir.rubix.service.spp/v3: '{"endpoints": [{"name": "http", "prefix": "/splunk-web", "domain-aliases": ["DEFAULT"]}]}'
+
+  service:
+    type: ClusterIP
+    ports:
+      - name: https-splunkd
+        port: 8089
+        protocol: TCP
+        targetPort: https-splunkd
+
+  podLabels:
+    app.kubernetes.io/name: standalone
+
 # Deploy Splunk Operator chart
 # Disable if the Splunk Operator is already deployed
 splunk-operator:
@@ -365,26 +383,26 @@ searchHeadCluster:
   replicaCount: 1
 
   appRepo: {}
-    # appsRepoPollIntervalSeconds:
-    # defaults:
-    #   volumeName:
-    #   scope:
-    # appSources:
-    #   - name:
-    #     location:
-    #     scope: # options (local|cluster|premiumApps) default local
-    #      premiumAppsProps: #only if scope is set to premiumApps
-    #        type: enterpriseSecurity
-    #        esDefaults:
-    #          sslEnablement: # options are ignore, strict, auto. default value is strict
-    # volumes:
-    #   - name:
-    #     storageType:
-    #     provider:
-    #     path:
-    #     endpoint:
-    #     region:
-    #     secretRef:
+#     appsRepoPollIntervalSeconds:
+#     defaults:
+#       volumeName:
+#       scope:
+#     appSources:
+#       - name:
+#         location:
+#         scope: # options (local|cluster|premiumApps) default local
+#          premiumAppsProps: #only if scope is set to premiumApps
+#            type: enterpriseSecurity
+#            esDefaults:
+#              sslEnablement: 'strict' # options are ignore, strict, auto. default value is strict
+#     volumes:
+#       - name:
+#         storageType:
+#         provider:
+#         path:
+#         endpoint:
+#         region:
+#         secretRef:
 
   volumes: []
 
@@ -577,27 +595,27 @@ licenseManager:
 
   additionalAnnotations: {}
 
-  appRepo: {}
-    # appsRepoPollIntervalSeconds:
-    # defaults:
-    #   volumeName:
-    #   scope:
-    # appSources:
-    #   - name:
-    #     location:
-    #     scope: # options (local|cluster|premiumApps) default local
-    #      premiumAppsProps: #only if scope is set to premiumApps
-    #        type: enterpriseSecurity
-    #        esDefaults:
-    #          sslEnablement: # options are ignore, strict, auto. default value is strict
-    # volumes:
-    #   - name:
-    #     storageType:
-    #     provider:
-    #     path:
-    #     endpoint:
-    #     region:
-    #     secretRef:
+  appRepo:
+     appsRepoPollIntervalSeconds:
+     defaults:
+       volumeName:
+       scope:
+     appSources:
+       - name:
+         location:
+         scope: # options (local|cluster|premiumApps) default local
+          premiumAppsProps: #only if scope is set to premiumApps
+            type: enterpriseSecurity
+            esDefaults:
+              sslEnablement:  # options are ignore, strict, auto. default value is strict
+     volumes:
+       - name:
+         storageType:
+         provider:
+         path:
+         endpoint:
+         region:
+         secretRef:
 
   volumes: []
   ## Example: mounting volume containing license in Splunk instance pod container
@@ -723,7 +741,29 @@ standalone:
     #     path:
     #     endpoint:
     #     secretRef:
-  volumes: []
+  volumes:
+    - name: certs
+      secret:
+        secretName: cert-splunk-stdln-standalone-service
+    - name: tls-external-ca-bundle
+      configMap:
+        name: "tls-external-ca-pem-bundle"
+        items:
+          - key: ca.pem
+            path: ca.pem
+    - name: web-conf
+      configMap:
+        name: "web-conf"
+
+#  volumeMounts:
+#    - name: certs
+#      mountPath: '/etc/auth/palantircerts/'
+#    - name: tls-external-ca-bundle
+#      subPath: 'ca.pem'
+#      mountPath: '/etc/auth/palantircerts'
+#    - name: web-conf
+#      subPath: 'web.conf'
+#      mountPath: '/etc/system/local'
 
   licenseUrl: ""
 

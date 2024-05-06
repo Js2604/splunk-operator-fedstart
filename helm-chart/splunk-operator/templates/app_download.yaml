@@ -22,6 +22,9 @@ spec:
 {{- if $.Values.splunkOperator.persistentVolumeClaim.storageClassName }}
   storageClassName: {{ $.Values.splunkOperator.persistentVolumeClaim.storageClassName }}
 {{- end }}
+{{- if (lookup "v1" "PersistentVolumeClaim" "dev-field-engineering" "splunk-operator-app-download") }}
+  volumeName: {{ (lookup "v1" "PersistentVolumeClaim" "dev-field-engineering" "splunk-operator-app-download").spec.volumeName }}
+{{- end }}
 
 ---
 {{- end }}

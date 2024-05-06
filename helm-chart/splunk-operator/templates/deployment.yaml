@@ -56,6 +56,8 @@ spec:
             protocol: TCP
           resources:
 {{- toYaml .Values.kubeRbacProxy.resources | nindent 12 }}
+          securityContext:
+{{- toYaml .Values.splunkOperator.containerSecurityContext | nindent 12 }}
         - name: manager
           image: "{{ .Values.splunkOperator.image.repository}}"
           imagePullPolicy: {{ .Values.splunkOperator.image.pullPolicy }}

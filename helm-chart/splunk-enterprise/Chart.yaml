@@ -30,5 +30,5 @@ maintainers:
 dependencies:
 - name: splunk-operator
   version: "2.5.2"
-  repository: "file://splunk-operator/helm-chart/splunk-operator"
+  repository: "file://../splunk-operator"
   condition: splunk-operator.enabled
