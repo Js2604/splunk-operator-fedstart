@@ -755,15 +755,15 @@ standalone:
       configMap:
         name: "web-conf"
 
-#  volumeMounts:
-#    - name: certs
-#      mountPath: '/etc/auth/palantircerts/'
-#    - name: tls-external-ca-bundle
-#      subPath: 'ca.pem'
-#      mountPath: '/etc/auth/palantircerts'
-#    - name: web-conf
-#      subPath: 'web.conf'
-#      mountPath: '/etc/system/local'
+  volumeMounts:
+    - name: certs
+      mountPath: '/etc/auth/palantircerts/'
+    - name: tls-external-ca-bundle
+      subPath: 'ca.pem'
+      mountPath: '/etc/auth/palantircerts'
+    - name: web-conf
+      subPath: 'web.conf'
+      mountPath: '/etc/system/local'
 
   licenseUrl: ""
 

@@ -169,8 +169,11 @@ type CommonSplunkSpec struct {
 	// Storage configuration for /opt/splunk/var volume
 	VarVolumeStorageConfig StorageClassSpec `json:"varVolumeStorageConfig"`
 
-	// List of one or more Kubernetes volumes. These will be mounted in all pod containers as as /mnt/<name>
+	// List of one or more Kubernetes volumes.
 	Volumes []corev1.Volume `json:"volumes"`
+
+	// List of one or more Kubernetes volume mounts.
+	VolumeMounts []corev1.VolumeMount `json:"volumeMounts"`
 
 	// Inline map of default.yml overrides used to initialize the environment
 	Defaults string `json:"defaults"`

@@ -82,6 +82,9 @@ spec:
   volumes:
 {{ toYaml . | indent 4 }}
 {{- end }}
+{{- with .Values.standalone.volumeMounts }}
+  volumeMounts:
+{{ toYaml . | indent 4}}
 {{- if .Values.standalone.licenseUrl }}
   licenseUrl: {{ .Values.standalone.licenseUrl }}
 {{- end }}
