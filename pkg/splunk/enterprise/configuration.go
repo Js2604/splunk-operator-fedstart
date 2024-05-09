@@ -759,11 +759,23 @@ func updateSplunkPodTemplateWithConfig(ctx context.Context, client splcommon.Con
 	if spec.Volumes != nil {
 		podTemplateSpec.Spec.Volumes = append(podTemplateSpec.Spec.Volumes, spec.Volumes...)
 		for idx := range podTemplateSpec.Spec.Containers {
-			for v := range spec.Volumes {
-				podTemplateSpec.Spec.Containers[idx].VolumeMounts = append(podTemplateSpec.Spec.Containers[idx].VolumeMounts, corev1.VolumeMount{
-					Name:      spec.Volumes[v].Name,
-					MountPath: "/mnt/" + spec.Volumes[v].Name,
-				})
+			for vi, v := range spec.Volumes {
+				currentVolumeMount := corev1.VolumeMount{
+					Name:      spec.Volumes[vi].Name,
+					MountPath: fmt.Sprintf("/mnt/%s", spec.Volumes[vi].Name),
+				}
+
+				// Check if there is a corresponding custom volumeMount for the current volume
+				for _, vm := range spec.VolumeMounts {
+					if vm.Name == v.Name {
+						currentVolumeMount = vm
+						break
+					}
+				}
+
+				podTemplateSpec.Spec.Containers[idx].VolumeMounts = append(
+					podTemplateSpec.Spec.Containers[idx].VolumeMounts, currentVolumeMount,
+				)
 			}
 		}
 	}
