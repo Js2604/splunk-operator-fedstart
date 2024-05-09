@@ -2,7 +2,6 @@
 FROM golang:1.21.1 as builder
 
 WORKDIR /workspace
-ENV GOPROXY=https://gomod.palantir.build
 
 # Copy the Go Modules manifests
 COPY go.mod go.mod
@@ -30,7 +29,6 @@ ENV OPERATOR=/manager \
     USER_UID=1001 \
     USER_NAME=nonroot
 
-RUN find /etc/yum.repos.d/ -name "*.repo" -exec sed -i '/^\[/ a sslverify=false' {} \;
 RUN yum -y install shadow-utils
 RUN useradd -ms /bin/bash nonroot -u 1001
 RUN yum update -y krb5-libs && yum clean all
