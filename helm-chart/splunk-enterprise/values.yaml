@@ -5,24 +5,6 @@ image:
   imagePullPolicy: ""
   imagePullSecrets: []
 
-splunkWeb:
-  name: splunk-stdln-standalone
-
-  annotations:
-    com.palantir.rubix.service/pod-cert: "{}"
-    com.palantir.rubix.service.spp/v3: '{"endpoints": [{"name": "http", "prefix": "/splunk-web", "domain-aliases": ["DEFAULT"]}]}'
-
-  service:
-    type: ClusterIP
-    ports:
-      - name: https-splunkd
-        port: 8089
-        protocol: TCP
-        targetPort: https-splunkd
-
-  podLabels:
-    app.kubernetes.io/name: standalone
-
 # Deploy Splunk Operator chart
 # Disable if the Splunk Operator is already deployed
 splunk-operator:
@@ -46,11 +28,11 @@ sva:
 
     indexerClusters: []
       # - name: idx1
-      # - name: idx2
+    # - name: idx2
 
     searchHeadClusters: []
       # - name: shc1
-      # - name: shc2
+    # - name: shc2
 
   # Distributed Clustered Deployment + SHC - Multi-Site (M4)
   # reference: https://www.splunk.com/pdfs/technical-briefs/splunk-validated-architectures.pdf#page=20
@@ -61,7 +43,7 @@ sva:
     clusterManager: {}
       # allSites: "site1,site2"
       # site: site1
-      # zone: us-west-1a
+    # zone: us-west-1a
 
     indexerClusters: []
       # - name: idx1
@@ -69,30 +51,30 @@ sva:
       #   zone: us-west-1a
       # - name: idx2
       #   site: site2
-      #   zone: us-west-1c
+    #   zone: us-west-1c
 
     searchHeadClusters: []
       # - name: shc1
       #   site: site2
-      #   zone: us-west-1c
+    #   zone: us-west-1c
 
 # Set name reference if ClusterManager is already deployed
 # Namespace is optional, set if the resource exists outside of the release namespace
 existingClusterManager: {}
   # name:
-  # namespace:
+# namespace:
 
 # Set name reference if MonitoringConsole is already deployed
 # Namespace is optional, set if the resource exists outside of the release namespace
 existingMonitoringConsole: {}
   # name:
-  # namespace:
+# namespace:
 
 # Set name reference if LicenseManager is already deployed
 # Namespace is optional, set if the resource exists outside of the release namespace
 existingLicenseManager: {}
   # name:
-  # namespace:
+# namespace:
 
 # Configure a Splunk Cluster Manager instance
 clusterManager:
@@ -135,7 +117,7 @@ clusterManager:
     #     path: bucket-app-framework-us-west-2/idxcAndCmApps/
     #     endpoint: https://s3-us-west-2.amazonaws.com
     #     region: us-west-2
-    #     secretRef: s3-secret
+  #     secretRef: s3-secret
 
   # Splunk Smartstore configuration
   # reference: https://github.com/splunk/splunk-operator/blob/develop/docs/SmartStore.md
@@ -155,7 +137,7 @@ clusterManager:
     #     volumeName: <remote_volume_name>
     #   - name: <index_name_3>
     #     remotePath: $_index_name
-    #     volumeName: <remote_volume_name>
+  #     volumeName: <remote_volume_name>
 
   # List volumes to be mounted in all pod containers
   # reference: https://kubernetes.io/docs/concepts/storage/volumes/
@@ -181,7 +163,7 @@ clusterManager:
     #   multisite_search_factor_total: 2
     #   idxc:
     #     search_factor: 2
-    #     replication_factor: 2
+  #     replication_factor: 2
 
   # Full path or URL for one or more defaults.yml files specific to App install, separated by commas
   defaultsUrlApps: ""
@@ -205,17 +187,17 @@ clusterManager:
     # initialDelaySeconds: 40
     # timeoutSeconds: 30
     # periodSeconds: 30
-    # failureThreshold: 12
+  # failureThreshold: 12
   livenessProbe: {}
     # initialDelaySeconds: 30
     # timeoutSeconds: 30
     # periodSeconds: 30
-    # failureThreshold: 3
+  # failureThreshold: 3
   readinessProbe: {}
     # initialDelaySeconds: 10
     # timeoutSeconds: 5
     # periodSeconds: 5
-    # failureThreshold: 3
+  # failureThreshold: 3
 
   # Storage configuration for /opt/splunk/etc volume
   # To use a StorageClass other than your default StorageClass, specify the storageClassName
@@ -241,7 +223,7 @@ clusterManager:
     #   cpu: "4"
     # limits:
     #   memory: "12Gi"
-    #   cpu: "24"
+  #   cpu: "24"
 
   # Specify a service account used by the Splunk instance pods
   # Default uses the Default Service Account to access the API server
@@ -266,7 +248,7 @@ clusterManager:
     #       - key: failure-domain.beta.kubernetes.io/zone
     #         operator: In
     #         values:
-    #         - zone-1a
+  #         - zone-1a
 
   # Configure a topology spread constraint
   #  https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
@@ -317,17 +299,17 @@ indexerCluster:
     # initialDelaySeconds: 40
     # timeoutSeconds: 30
     # periodSeconds: 30
-    # failureThreshold: 12
+  # failureThreshold: 12
   livenessProbe: {}
     # initialDelaySeconds: 30
     # timeoutSeconds: 30
     # periodSeconds: 30
-    # failureThreshold: 3
+  # failureThreshold: 3
   readinessProbe: {}
     # initialDelaySeconds: 10
     # timeoutSeconds: 5
     # periodSeconds: 5
-    # failureThreshold: 3
+  # failureThreshold: 3
 
   etcVolumeStorageConfig:
     ephemeralStorage: false
@@ -345,7 +327,7 @@ indexerCluster:
     #   cpu: "4"
     # limits:
     #   memory: "12Gi"
-    #   cpu: "24"
+  #   cpu: "24"
 
   serviceAccount: ""
 
@@ -383,26 +365,26 @@ searchHeadCluster:
   replicaCount: 1
 
   appRepo: {}
-#     appsRepoPollIntervalSeconds:
-#     defaults:
-#       volumeName:
-#       scope:
-#     appSources:
-#       - name:
-#         location:
-#         scope: # options (local|cluster|premiumApps) default local
-#          premiumAppsProps: #only if scope is set to premiumApps
-#            type: enterpriseSecurity
-#            esDefaults:
-#              sslEnablement: 'strict' # options are ignore, strict, auto. default value is strict
-#     volumes:
-#       - name:
-#         storageType:
-#         provider:
-#         path:
-#         endpoint:
-#         region:
-#         secretRef:
+    # appsRepoPollIntervalSeconds:
+    # defaults:
+    #   volumeName:
+    #   scope:
+    # appSources:
+    #   - name:
+    #     location:
+    #     scope: # options (local|cluster|premiumApps) default local
+    #      premiumAppsProps: #only if scope is set to premiumApps
+    #        type: enterpriseSecurity
+    #        esDefaults:
+    #          sslEnablement: # options are ignore, strict, auto. default value is strict
+    # volumes:
+    #   - name:
+    #     storageType:
+    #     provider:
+    #     path:
+    #     endpoint:
+    #     region:
+  #     secretRef:
 
   volumes: []
 
@@ -428,17 +410,17 @@ searchHeadCluster:
     # initialDelaySeconds: 40
     # timeoutSeconds: 30
     # periodSeconds: 30
-    # failureThreshold: 12
+  # failureThreshold: 12
   livenessProbe: {}
     # initialDelaySeconds: 30
     # timeoutSeconds: 30
     # periodSeconds: 30
-    # failureThreshold: 3
+  # failureThreshold: 3
   readinessProbe: {}
     # initialDelaySeconds: 10
     # timeoutSeconds: 5
     # periodSeconds: 5
-    # failureThreshold: 3
+  # failureThreshold: 3
 
   etcVolumeStorageConfig:
     ephemeralStorage: false
@@ -456,7 +438,7 @@ searchHeadCluster:
     #   cpu: "4"
     # limits:
     #   memory: "12Gi"
-    #   cpu: "24"
+  #   cpu: "24"
 
   serviceAccount: ""
 
@@ -506,7 +488,7 @@ monitoringConsole:
     #     path:
     #     endpoint:
     #     region:
-    #     secretRef:
+  #     secretRef:
 
   volumes: []
 
@@ -532,17 +514,17 @@ monitoringConsole:
     # initialDelaySeconds: 40
     # timeoutSeconds: 30
     # periodSeconds: 30
-    # failureThreshold: 12
+  # failureThreshold: 12
   livenessProbe: {}
     # initialDelaySeconds: 30
     # timeoutSeconds: 30
     # periodSeconds: 30
-    # failureThreshold: 3
+  # failureThreshold: 3
   readinessProbe: {}
     # initialDelaySeconds: 10
     # timeoutSeconds: 5
     # periodSeconds: 5
-    # failureThreshold: 3
+  # failureThreshold: 3
 
   etcVolumeStorageConfig:
     ephemeralStorage: false
@@ -560,7 +542,7 @@ monitoringConsole:
     #   cpu: "4"
     # limits:
     #   memory: "12Gi"
-    #   cpu: "24"
+  #   cpu: "24"
 
   serviceAccount: ""
 
@@ -595,27 +577,27 @@ licenseManager:
 
   additionalAnnotations: {}
 
-  appRepo:
-     appsRepoPollIntervalSeconds:
-     defaults:
-       volumeName:
-       scope:
-     appSources:
-       - name:
-         location:
-         scope: # options (local|cluster|premiumApps) default local
-          premiumAppsProps: #only if scope is set to premiumApps
-            type: enterpriseSecurity
-            esDefaults:
-              sslEnablement:  # options are ignore, strict, auto. default value is strict
-     volumes:
-       - name:
-         storageType:
-         provider:
-         path:
-         endpoint:
-         region:
-         secretRef:
+  appRepo: {}
+    # appsRepoPollIntervalSeconds:
+    # defaults:
+    #   volumeName:
+    #   scope:
+    # appSources:
+    #   - name:
+    #     location:
+    #     scope: # options (local|cluster|premiumApps) default local
+    #      premiumAppsProps: #only if scope is set to premiumApps
+    #        type: enterpriseSecurity
+    #        esDefaults:
+    #          sslEnablement: # options are ignore, strict, auto. default value is strict
+    # volumes:
+    #   - name:
+    #     storageType:
+    #     provider:
+    #     path:
+    #     endpoint:
+    #     region:
+  #     secretRef:
 
   volumes: []
   ## Example: mounting volume containing license in Splunk instance pod container
@@ -647,17 +629,17 @@ licenseManager:
     # initialDelaySeconds: 40
     # timeoutSeconds: 30
     # periodSeconds: 30
-    # failureThreshold: 12
+  # failureThreshold: 12
   livenessProbe: {}
     # initialDelaySeconds: 30
     # timeoutSeconds: 30
     # periodSeconds: 30
-    # failureThreshold: 3
+  # failureThreshold: 3
   readinessProbe: {}
     # initialDelaySeconds: 10
     # timeoutSeconds: 5
     # periodSeconds: 5
-    # failureThreshold: 3
+  # failureThreshold: 3
 
   etcVolumeStorageConfig:
     ephemeralStorage: false
@@ -675,7 +657,7 @@ licenseManager:
     #   cpu: "4"
     # limits:
     #   memory: "12Gi"
-    #   cpu: "24"
+  #   cpu: "24"
 
   serviceAccount: ""
 
@@ -727,7 +709,7 @@ standalone:
     #     path:
     #     endpoint:
     #     region:
-    #     secretRef:
+  #     secretRef:
 
   smartstore: {}
     # defaults:
@@ -740,30 +722,10 @@ standalone:
     #   - name:
     #     path:
     #     endpoint:
-    #     secretRef:
-  volumes:
-    - name: certs
-      secret:
-        secretName: cert-splunk-stdln-standalone-service
-    - name: tls-external-ca-bundle
-      configMap:
-        name: "tls-external-ca-pem-bundle"
-        items:
-          - key: ca.pem
-            path: ca.pem
-    - name: web-conf
-      configMap:
-        name: "web-conf"
+  #     secretRef:
+  volumes: []
 
-  volumeMounts:
-    - name: certs
-      mountPath: '/etc/auth/palantircerts/'
-    - name: tls-external-ca-bundle
-      subPath: 'ca.pem'
-      mountPath: '/etc/auth/palantircerts'
-    - name: web-conf
-      subPath: 'web.conf'
-      mountPath: '/etc/system/local'
+  volumeMounts: []
 
   licenseUrl: ""
 
@@ -787,17 +749,17 @@ standalone:
     # initialDelaySeconds: 40
     # timeoutSeconds: 30
     # periodSeconds: 30
-    # failureThreshold: 12
+  # failureThreshold: 12
   livenessProbe: {}
     # initialDelaySeconds: 30
     # timeoutSeconds: 30
     # periodSeconds: 30
-    # failureThreshold: 3
+  # failureThreshold: 3
   readinessProbe: {}
     # initialDelaySeconds: 10
     # timeoutSeconds: 5
     # periodSeconds: 5
-    # failureThreshold: 3
+  # failureThreshold: 3
 
   etcVolumeStorageConfig:
     ephemeralStorage: false
@@ -815,7 +777,7 @@ standalone:
     #   cpu: "4"
     # limits:
     #   memory: "12Gi"
-    #   cpu: "24"
+  #   cpu: "24"
 
   serviceAccount: ""
 

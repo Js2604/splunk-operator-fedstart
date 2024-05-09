@@ -9,11 +9,12 @@ image:
 # authorization against the Kubernetes API.
 # reference: https://github.com/brancz/kube-rbac-proxy
 kubeRbacProxy:
+
   # Specify kube-rbac-proxy image
   image:
-    repository: quay.io/brancz/kube-rbac-proxy
+    repository: gcr.io/kubebuilder/kube-rbac-proxy
     pullPolicy: IfNotPresent
-    tag: "v0.16.0"
+    tag: "v0.13.1"
 
   # Set resource requests and limits for kube-rbac-proxy container
   resources:
@@ -38,7 +39,7 @@ splunkOperator:
   imagePullSecrets: []
 
   # Give operator cluster-wide access, otherwise access is limited to operator namespace
-  clusterWideAccess: false
+  clusterWideAccess: true
 
   # List namespaces to be watched by Splunk Operator e.x "namespace1,namespace2", must have cluster-wide access
   # Default watches the entire cluster
@@ -48,9 +49,7 @@ splunkOperator:
   labels: {}
 
   # Add annotations to Splunk Operator deployment
-  annotations:
-    com.palantir.rubix.service/pod-cert: "{}"
-    com.palantir.rubix.service.spp/v3: '{"endpoints": [{"name": "http", "prefix": "/splunk", "domain-aliases": ["DEFAULT"]}]}'
+  annotations: {}
 
   # Add pod annotations to Splunk Operator deployment pod
   podAnnotations: {}
@@ -79,7 +78,6 @@ splunkOperator:
     fsGroup: 1001
     runAsNonRoot: true
 
-
   # Set usage of host networking and namespace
   # reference: https://kubernetes.io/docs/concepts/security/pod-security-policy/#host-namespaces
   hostNetwork: false
@@ -92,7 +90,6 @@ splunkOperator:
     httpGet:
       path: /healthz
       port: 8081
-      scheme: HTTP
     initialDelaySeconds: 15
     periodSeconds: 20
 
@@ -102,7 +99,6 @@ splunkOperator:
     httpGet:
       path: /readyz
       port: 8081
-      scheme: HTTP
     initialDelaySeconds: 5
     periodSeconds: 10
 
@@ -111,10 +107,10 @@ splunkOperator:
   service:
     type: ClusterIP
     ports:
-    - name: http
-      port: 80
-      protocol: TCP
-      targetPort: http
+      - name: http
+        port: 80
+        protocol: TCP
+        targetPort: http
   # - name: metric
   #   port: 8080
   #   protocol: TCP
@@ -138,16 +134,8 @@ splunkOperator:
   tolerations: []
 
   # Define affinity scheduling rules
-  # reference: https://kubernetesio./docs/reference/generated/kubernetes-api/v1.20/#affinity-v1-core
-  affinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-        nodeSelectorTerms:
-          - matchExpressions:
-              - key: com.palantir.rubix/instance-group
-                operator: In
-                values:
-                  - fedstart
+  # reference: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#affinity-v1-core
+  affinity: {}
 
   # Set duration in seconds the pod needs to terminate gracefully
   # reference: https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.20/#pod-v1-core
@@ -155,28 +143,25 @@ splunkOperator:
 
   # Set storageClassName for the PersistentVolumeClaim
   persistentVolumeClaim:
-    storageClassName: "rubix-aws-provisioner-v5"
+    storageClassName: "default"
 
   # Specify volumes for Splunk Operator pod, append additional volumes to list
   # reference: https://kubernetes.io/docs/concepts/storage/volumes/
   volumes:
-  - name: app-staging
-    persistentVolumeClaim:
-      claimName: splunk-operator-app-download
-  - name: certs
-    secret:
-      secretName: cert-splunk-operator-controller-manager-metrics-service
-# - name:
-#   persistentVolumeClaim:
-#     claimName:
+    - name: app-staging
+      persistentVolumeClaim:
+        claimName: splunk-operator-app-download
+  # - name:
+  #   persistentVolumeClaim:
+  #     claimName:
 
   # Specify volume mounts for the manager container, append additional volume mounts to list
   # reference: https://kubernetes.io/docs/tasks/configure-pod-container/configure-volume-storage/
   volumeMounts:
-  - mountPath: /opt/splunk/appframework/
-    name: app-staging
-  - mountPath: /opt/splunk/certs/
-    name: certs
+    - mountPath: /opt/splunk/appframework/
+      name: app-staging
+# - mountPath:
+#   name:
 
 # Array with extra yaml to deploy with the chart. Evaluated as a template
 extraManifests: []
